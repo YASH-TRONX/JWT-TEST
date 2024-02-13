@@ -1,0 +1,20 @@
+# GET http://localhost:3000/
+
+
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+    "username": "yash",
+    "email": "yash@gg.com",
+    "password": "home12"
+}
+
+
+# POST http://localhost:3000/auth/login
+
+
+# POST http://localhost:3000/auth/refresh-token
+
+
+# DELETE  http://localhost:3000/auth/logout
