@@ -4,6 +4,8 @@ const dotenv = require('dotenv');
 
 const createError = require('http-errors');
 
+const { verifyAccessToken } = require('./helpers/jwt_helper');
+
 dotenv.config();
 
 require('./helpers/init_mongodb');
@@ -22,7 +24,7 @@ const AuthRoute = require('./Routes/Auth.route');
 const PORT = process.env.PORT || 3000;
 
 
-app.get('/', async (req, res, next) => {
+app.get('/', verifyAccessToken, async (req, res, next) => {
     res.send('Mustang socho aur mehnat karo')
 })
 
