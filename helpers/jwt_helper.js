@@ -30,10 +30,9 @@ module.exports = {
         const bearerToken = authHeader.split(' ')
         const token = bearerToken[1]
         const tokenData = await RefToken.findOne({accessToken: token});
-        console.log(tokenData.status === false, tokenData.status)
         JWT.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {
-            if(err || !tokenData.status) {
-                const message = err?.name === 'JsonWebTokenError' || !tokenData.status ? 'Unauthorized' : err.message
+            if(err || !tokenData?.status) {
+                const message = err?.name === 'JsonWebTokenError' || !tokenData?.status ? 'Unauthorized' : err.message
 
                 return next(createError.Unauthorized(message))
             }
