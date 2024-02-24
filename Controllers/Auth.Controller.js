@@ -55,7 +55,7 @@ module.exports = {
     
             await newToken.save();
     
-            res.send({accessToken, refreshToken});
+            res.send({username: user.username, accessToken, refreshToken});
         }catch(error){
             if(error.isJoi === true) return next(createError.BadRequest('error username/password'));
             next(error)
