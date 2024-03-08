@@ -1,6 +1,6 @@
 const createError = require('http-errors');
 
-const {User, RefToken} = require('../Models/User.model');
+const {User, RefToken, mPin} = require('../Models/User.model');
 const {registerSchema, loginSchema} = require('../helpers/validation_schema');
 const { signAccessToken, signRefreshToken, verifyRefreshToken } = require('../helpers/jwt_helper');
 
@@ -20,7 +20,6 @@ module.exports = {
     
             const saveUser = await user.save()
     
-    
             const accessToken = await signAccessToken(saveUser.id);
     
             const refreshToken = await signRefreshToken(saveUser.id);
@@ -29,8 +28,7 @@ module.exports = {
     
             await newToken.save();
     
-    
-            res.send({accessToken, refreshToken});
+            res.send({accessToken, refreshToken, mPinSet: false});
         }catch(error){
             next(error)
         }
@@ -47,6 +45,8 @@ module.exports = {
     
             if(!isMatch) throw createError.Unauthorized('Username/password not valid');
     
+            const mPinExist = await mPin.findOne({email: result.email});
+
             const accessToken = await signAccessToken(user.id);
     
             const refreshToken = await signRefreshToken(user.id);
@@ -55,7 +55,7 @@ module.exports = {
     
             await newToken.save();
     
-            res.send({username: user.username, accessToken, refreshToken});
+            res.send({username: user.username, accessToken, refreshToken, mPinSet: mPinExist ? true : false});
         }catch(error){
             if(error.isJoi === true) return next(createError.BadRequest('error username/password'));
             next(error)
@@ -96,6 +96,23 @@ module.exports = {
     
             res.send({response: `${user.email} logged out`});
     
+        } catch (error) {
+            next(error)
+        }
+    },
+    setMPin: async (req, res, next) => {
+        try {
+            const result = await mPinSchema.validateAsync(req.body);
+            
+            const doesExist = await mPin.findOne({email: result.email});
+
+            if(doesExist) throw createError.Conflict(`${result.email} is already have Pin Set`);
+
+            const mpin = new mPin(result);
+
+            const saveMPin = await mpin.save()
+
+            res.send({response: `${saveMPin.email} pin set`});
         } catch (error) {
             next(error)
         }

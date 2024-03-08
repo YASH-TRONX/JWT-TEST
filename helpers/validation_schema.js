@@ -11,7 +11,13 @@ const loginSchema = Joi.object({
     password: Joi.string().min(4).required(),
 })
 
+const mPinSchema = Joi.object({
+    email: Joi.string().email().lowercase().required(),
+    mPin: Joi.number().required(),
+})
+
 module.exports = {
     registerSchema,
-    loginSchema
+    loginSchema,
+    mPinSchema
 }

@@ -19,6 +19,19 @@ const UserSchema = new Schema({
     }
 })
 
+const mPinSchema = new Schema({
+    email: {
+        type: String,
+        required: true,
+        lowercase: true,
+        unique: true,
+    },
+    mPin: {
+        type: Number,
+        required: true
+    }
+})
+
 const RefTokenSchema = new Schema({
     status: {
         type: Boolean,
@@ -55,8 +68,10 @@ UserSchema.methods.isValidPassword = async function (password) {
 
 
 const User =  mongoose.model('user', UserSchema)
+const mPin = mongoose.model('mPin',mPinSchema)
 const RefToken = mongoose.model('refToken', RefTokenSchema)
 module.exports = {
     User,
-    RefToken
+    RefToken,
+    mPin
 }
