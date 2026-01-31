@@ -3,14 +3,12 @@ const router = express.Router();
 
 const AuthController = require('../Controllers/Auth.Controller');
 
-router.post('/register',AuthController.register)
+router.post('/register', AuthController.register)
 
 router.post('/login', AuthController.login)
 
 router.post('/setMPin', AuthController.setMPin)
 
 router.post('/refresh-token', AuthController.refreshToken)
-
-router.delete('/logout', AuthController.logout)
 
 module.exports = router
